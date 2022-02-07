@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken';)
 const settings = require('../../config/db/settings');
 
-const generarJWT = (correo, nombre) => {
+export const generarJWT = (correo, nombre) => {
 
     return new Promise((resolve, reject) => {
 
@@ -21,7 +21,7 @@ const generarJWT = (correo, nombre) => {
     })
 }
 
-const authenticateToken = (req, res, next) => {
+export const authenticateToken = (req, res, next) => {
     const authHeader = req.headers?.authorization;
 
     const token = authHeader && authHeader.split(' ')[1]
@@ -38,11 +38,6 @@ const authenticateToken = (req, res, next) => {
         next()
     })
 }
-
-module.exports = {
-    generarJWT,
-    authenticateToken
-} 
 
 
 

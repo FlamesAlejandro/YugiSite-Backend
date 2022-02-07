@@ -1,20 +1,18 @@
 const { Request, Response } = require("express");
 const bcryptjs = require("bcryptjs");
 const { generarJWT } = require("../helpers/jwt");
-const initModels = require("../models/init-models");
-const { db } = require("../../config/db/connection");
+const { usuario, usuarioAttributes } = require("../models/usuario");
+const { NavigationService } = require('../service/navigationService');
 
-const { usuario } = initModels(db);
-
-const PostLogin = async (req, res) => {
-    const { correo, password } = req.body;
+export const login = async (req, res) => {
+    const { email, password } = req.body;
 
     try {
         const authUser = await usuario.findOne({
-            where: { correo },
+            where: { email },
         });
 
-        // Verificar si el correo existe
+        // Verificar si el email existe
         if (!authUser) {
             return res.status(200).json({
                 success: false,
@@ -45,17 +43,19 @@ const PostLogin = async (req, res) => {
         }
 
         // Generar el JWT
-        const token = await generarJWT(authUser.correo, authUser.nombre);
+        const token = await generarJWT(authUser.email, authUser.nombre);
+
+        // buscar navegacion que le corresponde a ese rol
+        const navigation = await NavigationService.GetNavigation(authUser.email);
 
         res.json({
             success: true,
             message: "Autentificación correcta",
-            email: authUser.correo,
+            email: authUser.email,
             nombre: authUser.nombre,
-            rol: authUser.Rol_idRol,
+            navigation,
             token,
         });
-        
     } catch (error) {
         res.status(500).json({
             msg: "Hable con el administrador",
@@ -67,10 +67,10 @@ const PostLogin = async (req, res) => {
 
 const Signin = async(req, res) => {
 
-    const { correo, password } = req.body;
+    const { email, password } = req.body;
 
     try {
-        let usuario = await Usuario.findOne({ correo });
+        let usuario = await Usuario.findOne({ email });
 
         if ( usuario ) {
             return res.status(400).json({
@@ -89,7 +89,7 @@ const Signin = async(req, res) => {
         await usuario.save();
 
         // Generar JWT
-        const token = await generarJWT( usuario.id, usuario.nombre );
+        const token = await generarJWT( usuario.id, usuario.name );
 
         res.status(201).json({
             ok: true,
@@ -110,5 +110,5 @@ const Signin = async(req, res) => {
 
 
 module.exports = {
-    PostLogin
+    login
 }

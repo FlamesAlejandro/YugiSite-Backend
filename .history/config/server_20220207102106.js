@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const authRoutes = require('../app/routes/authRoutes');
-const db = require ('./db/connection');
 
 class Server {
 
@@ -17,6 +16,18 @@ class Server {
 
         // Rutas de mi aplicación
         this.routes();
+    }
+
+    // base de datos
+    async dbConnection() {
+        try {
+
+            await db.authenticate();
+            console.log('database online');
+
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     middlewares() {

@@ -1,15 +1,11 @@
 const express = require('express');
 const cors = require('cors');
-const authRoutes = require('../app/routes/authRoutes');
-const db = require ('./db/connection');
 
 class Server {
 
     constructor() {
         this.app  = express();
-        this.port = process.env.PORT || '8000';
-        
-        // Api Path
+        this.port = process.env.PORT;
         this.authPath = '/api/auth';
 
         // Middlewares
@@ -33,7 +29,7 @@ class Server {
     }
 
     routes() {
-        this.app.use( this.authPath, authRoutes);
+        this.app.use( this.authPath, require('../routes/authRoutes'));
     }
 
     listen() {

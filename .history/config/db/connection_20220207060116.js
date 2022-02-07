@@ -1,4 +1,4 @@
-const { Dialect, Sequelize } = require('sequelize');
+const { Dialect, Sequelize } =  require('sequelize');
 
 const db = new Sequelize(
     process.env.DB_DATABASE ?? 'yugisite',
@@ -11,6 +11,4 @@ const db = new Sequelize(
     }
     );
 
-module.exports = {
-    db,
-}
+export default db

@@ -4,9 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.js",
-    "start": "npm run dev"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +17,7 @@
     "jsonwebtoken": "^8.5.1",
     "mariadb": "^2.5.5",
     "mysql2": "^2.3.3",
-    "sequelize": "^6.11.0",
+    "sequelize": "^6.14.1",
     "sequelize-auto": "^0.8.8"
   }
 }

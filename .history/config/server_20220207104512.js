@@ -12,11 +12,24 @@ class Server {
         // Api Path
         this.authPath = '/api/auth';
 
+        this.dbConnection();
         // Middlewares
         this.middlewares();
 
         // Rutas de mi aplicación
         this.routes();
+    }
+
+    // base de datos
+    dbConnection async() {
+        try {
+
+            await db.authenticate();
+            console.log('database online');
+
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     middlewares() {

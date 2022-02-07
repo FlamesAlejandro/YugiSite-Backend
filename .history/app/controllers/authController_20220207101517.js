@@ -1,26 +1,25 @@
 const { Request, Response } = require("express");
 const bcryptjs = require("bcryptjs");
 const { generarJWT } = require("../helpers/jwt");
-const initModels = require("../models/init-models");
-const { db } = require("../../config/db/connection");
-
-const { usuario } = initModels(db);
+const { usuario } = require("../models/usuario");
 
 const PostLogin = async (req, res) => {
-    const { correo, password } = req.body;
+    const { email, password } = req.body;
+    console.log('llego aca');
 
     try {
         const authUser = await usuario.findOne({
-            where: { correo },
+            where: { email },
         });
 
-        // Verificar si el correo existe
+        // Verificar si el email existe
         if (!authUser) {
             return res.status(200).json({
                 success: false,
                 message: "Usuario / Password no son correctos",
             });
         }
+        console.log('llego aca parte2');
 
         // SI el usuario está activo
         // VER SI EL ESTADO ES UN BOOLEAN O NUMERO
@@ -36,6 +35,7 @@ const PostLogin = async (req, res) => {
 
         // Verificar la contraseña
         const validPassword = bcryptjs.compareSync(password, authUser.password);
+        console.log('llego aca 3');
 
         if (!validPassword) {
             return res.status(200).json({
@@ -43,19 +43,21 @@ const PostLogin = async (req, res) => {
                 message: "Usuario / Password no son correctos - password",
             });
         }
+        console.log('llego aca 4');
 
         // Generar el JWT
-        const token = await generarJWT(authUser.correo, authUser.nombre);
+        const token = await generarJWT(authUser.email, authUser.nombre);
+        console.log('llego aca 5');
 
         res.json({
             success: true,
             message: "Autentificación correcta",
-            email: authUser.correo,
+            email: authUser.email,
             nombre: authUser.nombre,
             rol: authUser.Rol_idRol,
             token,
         });
-        
+        console.log('llego aca 6');
     } catch (error) {
         res.status(500).json({
             msg: "Hable con el administrador",
@@ -67,10 +69,10 @@ const PostLogin = async (req, res) => {
 
 const Signin = async(req, res) => {
 
-    const { correo, password } = req.body;
+    const { email, password } = req.body;
 
     try {
-        let usuario = await Usuario.findOne({ correo });
+        let usuario = await Usuario.findOne({ email });
 
         if ( usuario ) {
             return res.status(400).json({
@@ -89,7 +91,7 @@ const Signin = async(req, res) => {
         await usuario.save();
 
         // Generar JWT
-        const token = await generarJWT( usuario.id, usuario.nombre );
+        const token = await generarJWT( usuario.id, usuario.name );
 
         res.status(201).json({
             ok: true,

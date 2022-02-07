@@ -1,13 +1,11 @@
 const express = require('express');
 const cors = require('cors');
-const authRoutes = require('../app/routes/authRoutes');
-const db = require ('./db/connection');
 
 class Server {
 
     constructor() {
         this.app  = express();
-        this.port = process.env.PORT || '8000';
+        this.port = process.env.PORT; 
         
         // Api Path
         this.authPath = '/api/auth';
@@ -33,7 +31,7 @@ class Server {
     }
 
     routes() {
-        this.app.use( this.authPath, authRoutes);
+        this.app.use( this.authPath, require('../routes/authRoutes'));
     }
 
     listen() {
